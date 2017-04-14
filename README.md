@@ -1,23 +1,102 @@
 # **pkg-notify**
 
+Simple `/bin/sh` script to notify via Pushover API about pkg update candidates in FreeBSD, etc
+
 ### Features:
+
 - update version of `pkg`
 - log output of `pkg upgrade -n` to a file and parse it for numbers
 - upload the log file to [termbin.com](http://termbin.com) for temporary hosting (month if nothing changed)
-- send notification using [Pushover](https://pushover.net) including numbers and URL for the log file
+- send notification to [Pushover](https://pushover.net) app using netcat including numbers and URL for the log file
+
+### Requirements:
+
+- `pkg`
+- `curl`
+- `nc`
+- [Pushover account](https://pushover.net/login)
 
 ---
-### Message example:
+
+### Installation example:
+
+```
+cd /root/ && \
+
+git clone https://github.com/InQuize/pkg-notify.git
+
+chmod 0700 /root/pkg-notify/pkg-notify.sh
+```
+
+### Configuration:
+
+- edit `pkg-notify.sh` to fill in **your** Pushover _User Key_ and _App Token_:
+
+```
+TOKEN=uQiRzpo4DXghDmr9QzzfQu27cmVRsG
+USER=azGDORePK8gMaC0QOYAMyEEuzJnyUi
+```
+
+- to change path for `pkg` / `curl` / `nc` use:
+
+>NOTE: try commands:
+```
+whereis pkg
+whereis curl
+whereis nc
+```
+>NOTE: path includes executable itself
+
+```
+PKG_PATH="/usr/sbin/pkg"
+CURL_PATH="/usr/local/bin/curl"
+NC_PATH="/usr/bin/nc"
+```
+
+- to customize log file name and path:
+
+```
+LOG="/tmp/pkg.log"
+```
+
+- to use message title other then machine's hostname just comment (`#`) the corresponding line and add yours:
+
+```
+#MSG_TITLE=$(hostname)
+MSG_TITLE="your title in doube quotes"
+```
+
+- to customize link text of log paste use:
+
+```
+URL_TITLE="Your text in double quotes"
+```
+
+- execute to test: `sh /root/pkg-notify/pkg-notify.sh`
+
+---
+
+### Example cron job:
+
+>NOTE: [Generate your own](http://crontab-generator.org/)
+
+>NOTE: execute every day at 6:30 AM and redirect output (including errors) to a file in `/tmp/` overwrighting it contents
+
+- `crontab -u root -e` :
+
+```
+30 6 * * * /bin/sh /root/pkg-notify/pkg-notify.sh > /tmp/pkg-notify.log 2>&1
+```
+
+---
+
+### Screenshots:
 
 >NOTE: 123 in message title is actually a system's hostname
 
-![Message in Pushover Android app](https://github.com/InQuize/img/raw/master/repos/pkg-notify/pushover-msg.png)
+<img src="https://raw.githubusercontent.com/InQuize/img/master/repos/pkg-notify/pushover-msg.png" width="425" /> <img src="https://raw.githubusercontent.com/InQuize/img/master/repos/pkg-notify/termbin-paste.png" width="425" />
 
-### Log file preview example:
-
-![log file opened in Chrome](https://github.com/InQuize/img/raw/master/repos/pkg-notify/termbin-paste.png)
-
-### Log file raw example:
+### Example log file raw text:
 
 ```
 Updating FreeBSD repository catalogue...
