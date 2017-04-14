@@ -1,19 +1,23 @@
 # **pkg-notify**
 
+### Features:
 - update version of `pkg`
 - log output of `pkg upgrade -n` to a file and parse it for numbers
 - upload the log file to [termbin.com](http://termbin.com) for temporary hosting (month if nothing changed)
 - send notification using [Pushover](https://pushover.net) including numbers and URL for the log file
 
 ---
+### Message example:
 
 >NOTE: 123 in message title is actually a system's hostname
 
 ![Message in Pushover Android app](https://github.com/InQuize/img/raw/master/repos/pkg-notify/pushover-msg.png)
 
+### Log file preview example:
 
 ![log file opened in Chrome](https://github.com/InQuize/img/raw/master/repos/pkg-notify/termbin-paste.png)
 
+### Log file raw example:
 
 ```
 Updating FreeBSD repository catalogue...
