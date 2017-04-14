@@ -5,6 +5,7 @@ USER=
 
 PKG_PATH="/usr/sbin/pkg"
 CURL_PATH="/usr/local/bin/curl"
+NC_PATH="/usr/bin/nc"
 LOG="/tmp/pkg.log"
 MSG_TITLE=$(hostname)
 URL_TITLE=""
@@ -22,6 +23,12 @@ fi
 if [ ! -f "$CURL_PATH" ] ; then
   FAIL=1
   echo "Wrong CURL_PATH"
+else FAIL=0
+fi
+
+if [ ! -f "$NC_PATH" ] ; then
+  FAIL=1
+  echo "Wrong NC_PATH"
 else FAIL=0
 fi
 
