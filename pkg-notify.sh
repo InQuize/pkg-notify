@@ -34,19 +34,20 @@ fi
 if [ "$FAIL" -eq "0" ] ; then
 
   INSTALL=$(awk -F': ' '/to be installed/{printf "%s\n", $2}' $LOG)
-  if [ -z "$INSTALL" ] ; then FAKE="0" ; fi
+  if [ -z "$INSTALL" ] ; then INSTALL="0" ; fi
 
   UPGRADE=$(awk -F': ' '/to be upgraded/{printf "%s\n", $2}' $LOG)
-  if [ -z "$UPGRADE" ] ; then FAKE="0" ; fi
+  if [ -z "$UPGRADE" ] ; then UPGRADE="0" ; fi
 
   REINSTALL=$(awk -F': ' '/to be reinstalled/{printf "%s\n", $2}' $LOG)
-  if [ -z "$REINSTALL" ] ; then FAKE="0" ; fi
+  if [ -z "$REINSTALL" ] ; then REINSTALL="0" ; fi
 
   TOTAL=$(($INSTALL+$UPGRADE+$REINSTALL))
 
   if [ "$TOTAL" -gt "0" ] ; then
     MESSAGE="$TOTAL total updates\n"
     PASTE=$(cat $LOG | nc termbin.com 9999)
+  else echo "Nothing to update."
   fi
 
   if [ "$INSTALL" -gt 0 ] ; then MESSAGE=$MESSAGE"\n$INSTALL to install" ; fi
@@ -58,6 +59,7 @@ fi
 MESSAGE=$(echo -e $MESSAGE)
 
 if [ ! -z "$MESSAGE" ] ; then
+  echo "Pushing notifitation..."
   curl -s \
     --form-string "token=$TOKEN" \
     --form-string "user=$USER" \
@@ -66,4 +68,5 @@ if [ ! -z "$MESSAGE" ] ; then
     --form-string "url=$PASTE" \
     --form-string "url_title=$URL_TITLE" \
     https://api.pushover.net/1/messages.json
+else echo "Nothing to push. Exiting..."
 fi
