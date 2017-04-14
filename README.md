@@ -22,9 +22,7 @@ Simple `/bin/sh` script to notify via Pushover API about pkg update candidates i
 
 ```
 cd /root/ && \
-
 git clone https://github.com/InQuize/pkg-notify.git
-
 chmod 0700 /root/pkg-notify/pkg-notify.sh
 ```
 
