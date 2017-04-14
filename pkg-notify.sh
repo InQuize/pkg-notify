@@ -3,15 +3,37 @@
 TOKEN=
 USER=
 
-LOG="pkg.log"
+PKG_PATH="/usr/sbin/pkg"
+CURL_PATH="/usr/local/bin/curl"
+LOG="/tmp/pkg.log"
 MSG_TITLE=$(hostname)
-URL_TITLE="_________________[pkg log]_________________"
+URL_TITLE=""
 
 ############################################################################
 
+touch $LOG 2>/dev/null
+
+if [ ! -f "$PKG_PATH" ] ; then
+  FAIL=1
+  echo "Wrong PKG_PATH"
+else FAIL=0
+fi
+
+if [ ! -f "$CURL_PATH" ] ; then
+  FAIL=1
+  echo "Wrong CURL_PATH"
+else FAIL=0
+fi
+
+if [ ! -f "$LOG" ] ; then
+  FAIL=1
+  echo "Unable to access log file"
+else FAIL=0
+fi
+
 if [ ! -r "$LOG" ] ; then
   FAIL=1
-  echo "Insufficient permissions for log file"
+  echo "Unable to read log file"
 else FAIL=0
 fi
 
@@ -23,7 +45,7 @@ fi
 
 cat /dev/null > $LOG
 
-pkg update >/dev/null && pkg install -y pkg >/dev/null && pkg upgrade -n > pkg.log
+$PKG_PATH update >/dev/null && $PKG_PATH install -y pkg >/dev/null && $PKG_PATH upgrade -n > $LOG
 
 if [ ! -s $LOG ] ; then
  FAIL=1
@@ -50,6 +72,8 @@ if [ "$FAIL" -eq "0" ] ; then
   else echo "Nothing to update."
   fi
 
+  if [ ! -n "$URL_TITLE" ] ; then URL_TITLE="Log: $PASTE" ; fi
+
   if [ "$INSTALL" -gt 0 ] ; then MESSAGE=$MESSAGE"\n$INSTALL to install" ; fi
   if [ "$UPGRADE" -gt 0 ] ; then MESSAGE=$MESSAGE"\n$UPGRADE to upgrade" ; fi
   if [ "$REINSTALL" -gt 0 ] ; then MESSAGE=$MESSAGE"\n$REINSTALL to reinstall" ; fi
@@ -60,7 +84,7 @@ MESSAGE=$(echo -e $MESSAGE)
 
 if [ ! -z "$MESSAGE" ] ; then
   echo "Pushing notifitation..."
-  curl -s \
+  $CURL_PATH -s \
     --form-string "token=$TOKEN" \
     --form-string "user=$USER" \
     --form-string "title=$MSG_TITLE" \
