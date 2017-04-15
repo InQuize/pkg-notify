@@ -23,12 +23,15 @@ Simple `/bin/sh` script to notify via Pushover API about pkg update candidates i
 ```
 cd /root/ && \
 git clone https://github.com/InQuize/pkg-notify.git
-chmod 0700 /root/pkg-notify/pkg-notify.sh
+cp /root/pkg-notify/config.example /root/pkg-notify/config && \
+chmod 0700 /root/pkg-notify/config
 ```
 
 ### Configuration:
 
-- edit `pkg-notify.sh` to fill in **your** Pushover _User Key_ and _App Token_:
+- edit `config` file to fill in **your** Pushover _User Key_ and _App Token_:
+
+>NOTE: these are the only variables that **must** be in config
 
 ```
 TOKEN=uQiRzpo4DXghDmr9QzzfQu27cmVRsG
