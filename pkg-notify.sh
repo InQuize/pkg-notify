@@ -2,33 +2,26 @@
 
 ######################### DO NOT TOUCH THE DEFAULTS ########################
 
-PKG_PATH="/usr/sbin/pkg"
-CURL_PATH="/usr/local/bin/curl"
-NC_PATH="/usr/bin/nc"
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 LOG="/tmp/pkg.log"
 MSG_TITLE=$(hostname)
 URL_TITLE=""
 
 ############################################################################
 
-if [ ! -f "$PWD/config" ] ; then ERROR=" No config file" ; NOPUSH=1 ; fi
-if [ ! -r "$PWD/config" ] ; then ERROR=" Unable to read config file" ; NOPUSH=1 ; fi
+export PATH=$PATH
+DIR=$(dirname $0)
+
+if [ ! -f "$DIR/config" ] ; then ERROR=" No config file" ; NOPUSH=1 ; fi
+if [ ! -r "$DIR/config" ] ; then ERROR=" Unable to read config file" ; NOPUSH=1 ; fi
 
 if [ -z "$ERROR" ] ; then
-  . $PWD/config
+  . $DIR/config
   if [ -z "$USER" ] ; then ERROR=" USER not set" ; NOPUSH=1 ; fi
   if [ -z "$TOKEN" ] ; then ERROR=" TOKEN not set" ; NOPUSH=1 ; fi
 fi
 
-touch $LOG 2>/dev/null
-
-if [ ! -f "$PKG_PATH" ] ; then ERROR=" Wrong PKG_PATH (path to pkg binary): check/set in config" ; fi
-if [ ! -f "$NC_PATH" ] ; then ERROR=" Wrong NC_PATH (path to netcat binary): check/set in config" ; fi
-
-if [ ! -f "$CURL_PATH" ] ; then
-  ERROR=" Wrong CURL_PATH (path to curl binary): check/set in config"
-  NOPUSH=1
-fi
+touch $LOG 2> /dev/null
 
 if [ ! -f "$LOG" ] ; then ERROR=" Unable to access specified log file path" ; fi
 if [ ! -r "$LOG" ] ; then ERROR=" Unable to read log file" ; fi
@@ -37,7 +30,7 @@ if [ ! -w "$LOG" ] ; then ERROR=" Unable to write to log file" ; fi
 cat $LOG > $LOG.bak 2> /dev/null
 cat /dev/null > $LOG
 
-$PKG_PATH update > /dev/null && $PKG_PATH install -y pkg > /dev/null && $PKG_PATH upgrade -n > $LOG
+pkg update > /dev/null && pkg install -y pkg > /dev/null && pkg upgrade -n > $LOG
 
 if [ ! -s $LOG ] ; then ERROR=" Failed to get pkg output" ; fi
 
@@ -55,7 +48,7 @@ if [ -z "$ERROR" ] ; then
 
   if [ "$TOTAL" -gt "0" ] ; then
     MESSAGE="$TOTAL total updates\n"
-    PASTE=$(cat $LOG | $NC_PATH termbin.com 9999)
+    PASTE=$(cat $LOG | nc termbin.com 9999)
   else echo " Nothing to update"
   fi
 
@@ -72,7 +65,7 @@ MESSAGE=$(echo -e $MESSAGE)
 if [ -n "$MESSAGE" ] ; then
   if [ -z "$NOPUSH" ] ; then
     echo " Pushing notifitation..."
-    PUSH_RESULT=$($CURL_PATH -s \
+    PUSH_RESULT=$(curl -s \
       --form-string "token=$TOKEN" \
       --form-string "user=$USER" \
       --form-string "title=$MSG_TITLE" \

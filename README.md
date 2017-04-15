@@ -14,6 +14,7 @@ Simple `/bin/sh` script to notify via Pushover API about pkg update candidates i
 - `pkg`
 - `curl`
 - `nc`
+- `dirname`
 - [Pushover account](https://pushover.net/login)
 
 ---
@@ -29,6 +30,9 @@ chmod 0700 /root/pkg-notify/config
 
 ### Configuration:
 
+>NOTE: **Do not** edit `pkg-notify.sh` for the sake of configuration. All 'user-servisable' variables are 
+located in `config` file
+
 - edit `config` file to fill in **your** Pushover _User Key_ and _App Token_:
 
 >NOTE: these are the only variables that **must** be in config
@@ -38,20 +42,10 @@ TOKEN=uQiRzpo4DXghDmr9QzzfQu27cmVRsG
 USER=azGDORePK8gMaC0QOYAMyEEuzJnyUi
 ```
 
-- to change path for `pkg` / `curl` / `nc` use:
-
->NOTE: try commands:
-```
-whereis pkg
-whereis curl
-whereis nc
-```
->NOTE: path includes executable itself
+- in case of `executable not found` issues revise:
 
 ```
-PKG_PATH="/usr/sbin/pkg"
-CURL_PATH="/usr/local/bin/curl"
-NC_PATH="/usr/bin/nc"
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 ```
 
 - to customize log file name and path:

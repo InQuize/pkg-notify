@@ -1,10 +1,7 @@
 USER=
 TOKEN=
 
-PKG_PATH="/usr/sbin/pkg"
-CURL_PATH="/usr/local/bin/curl"
-NC_PATH="/usr/bin/nc"
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 LOG="/tmp/pkg.log"
 MSG_TITLE=$(hostname)
 URL_TITLE=""
-
