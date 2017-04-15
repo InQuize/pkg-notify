@@ -5,3 +5,4 @@ PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 LOG="/tmp/pkg.log"
 MSG_TITLE=$(hostname)
 URL_TITLE=""
+DEBUG=0

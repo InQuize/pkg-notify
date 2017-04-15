@@ -6,6 +6,7 @@ PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 LOG="/tmp/pkg.log"
 MSG_TITLE=$(hostname)
 URL_TITLE=""
+DEBUG=0
 
 ############################################################################
 
@@ -27,7 +28,7 @@ if [ ! -f "$LOG" ] ; then ERROR=" Unable to access specified log file path" ; fi
 if [ ! -r "$LOG" ] ; then ERROR=" Unable to read log file" ; fi
 if [ ! -w "$LOG" ] ; then ERROR=" Unable to write to log file" ; fi
 
-cat $LOG > $LOG.bak 2> /dev/null
+if [ "$DEBUG" -eq 1 ] ; then cat $LOG > $LOG.bak 2> /dev/null ; fi
 cat /dev/null > $LOG
 
 pkg update > /dev/null && pkg install -y pkg > /dev/null && pkg upgrade -n > $LOG
@@ -65,7 +66,7 @@ MESSAGE=$(echo -e $MESSAGE)
 if [ -n "$MESSAGE" ] ; then
   if [ -z "$NOPUSH" ] ; then
     echo " Pushing notifitation..."
-    PUSH_RESULT=$(curl -s \
+    PUSH_CALL=$(curl -s \
       --form-string "token=$TOKEN" \
       --form-string "user=$USER" \
       --form-string "title=$MSG_TITLE" \
@@ -73,7 +74,12 @@ if [ -n "$MESSAGE" ] ; then
       --form-string "url=$PASTE" \
       --form-string "url_title=$URL_TITLE" \
       https://api.pushover.net/1/messages.json)
-    echo -e " Pushover API answer: $PUSH_RESULT "
+
+    PUSH_STATUS=$(echo $PUSH_CALL | sed -e 's/[{}]/''/g' | awk -v RS=',"' -F: '/status/ {print $2}')
+
+    if [ "$PUSH_STATUS" -eq 1 ] ; then echo " Done" ; else echo " Something went wrong" ; fi
+
+    if [ "$DEBUG" -eq 1 ] ; then echo -e " Pushover API answer: $PUSH_CALL " ; fi
   else echo -e " Skipping push\n Exiting...."
   fi
 else echo -e " Nothing to push\n Exiting..."

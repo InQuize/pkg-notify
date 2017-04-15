@@ -35,7 +35,7 @@ located in `config` file
 
 - edit `config` file to fill in **your** Pushover _User Key_ and _App Token_:
 
->NOTE: these are the only variables that **must** be in config
+>NOTE: these are the **only variables** that are **necessary** in config
 
 ```
 TOKEN=uQiRzpo4DXghDmr9QzzfQu27cmVRsG
