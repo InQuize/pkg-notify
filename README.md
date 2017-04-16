@@ -1,6 +1,6 @@
 # **pkg-notify**
 
-Simple `/bin/sh` script to notify via Pushover API about pkg update candidates in FreeBSD, etc
+Simple `sh` script to notify via Pushover API about `pkg` update candidates in FreeBSD, etc
 
 ### Features:
 
@@ -12,9 +12,7 @@ Simple `/bin/sh` script to notify via Pushover API about pkg update candidates i
 ### Requirements:
 
 - `pkg`
-- `curl`
-- `nc`
-- `dirname`
+- `curl`, `nc`, `dirname`
 - [Pushover account](https://pushover.net/login)
 
 ---
@@ -35,7 +33,7 @@ located in `config` file
 
 - edit `config` file to fill in **your** Pushover _User Key_ and _App Token_:
 
->NOTE: these are the **only variables** that are **necessary** in config
+>NOTE: these are the **only variables** that are **necessary**
 
 ```
 TOKEN=uQiRzpo4DXghDmr9QzzfQu27cmVRsG
@@ -54,7 +52,7 @@ PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 LOG="/tmp/pkg.log"
 ```
 
-- to use message title other then machine's hostname just comment (`#`) the corresponding line and add yours:
+- to use message title other than machine's hostname just comment (`#`) the corresponding line and add yours:
 
 ```
 #MSG_TITLE=$(hostname)
