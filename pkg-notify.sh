@@ -78,8 +78,7 @@ if [ -n "$MESSAGE" ] ; then
     PUSH_STATUS=$(echo $PUSH_CALL | sed -e 's/[{}]/''/g' | awk -v RS=',"' -F: '/status/ {print $2}')
 
     if [ "$PUSH_STATUS" -eq 1 ] ; then echo " Done" ; else echo " Something went wrong" ; fi
-
-    if [ "$DEBUG" -eq 1 ] ; then echo -e " Pushover API answer: $PUSH_CALL " ; fi
+    if [ "$DEBUG" -eq 1 -o "$PUSH_STATUS" -eq 0 ] ; then echo -e " Pushover API answer: $PUSH_CALL " ; fi
   else echo -e " Skipping push\n Exiting...."
   fi
 else echo -e " Nothing to push\n Exiting..."
